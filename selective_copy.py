@@ -1,26 +1,36 @@
 #! python3
-# selective_copy.py — An exercise in organizing files.
-# For more information, see enclosed project_details.txt file.
+"""selective_copy.py — An exercise in organizing files.
+For more information, see enclosed project_details.txt file."""
 
 import os
 import re
 import shutil
 
+file_list = []
+
 
 def selective_copy(file_path):
-    # TODO: Walk through folder tree.
+    """Walk through folder tree, search for files with user-defined file extension,
+    then copy those files to a user-defined folder."""
+
+    ext_regex = re.compile(r"(.*)\." + (input("Type desired file extension here: ")))
+    new_folder = input(f"Please type path to destination folder: ")
+    relocation_folder = f"{os.getcwd()}/{new_folder}"
+
     for folder_name, subfolders, filenames in os.walk(file_path):
-        print(f"The current folder is {folder_name}")
-
-        for subfolder in subfolders:
-            print(f"Subfolder of {folder_name}: {subfolder}")
-
         for filename in filenames:
-            print(f"File inside {folder_name}: {filename}")
+            absolute_path = f"{os.getcwd()}/{folder_name}/{filename}"
+            mo = ext_regex.search(absolute_path)
+            if mo is not None:
+                file_list.append(mo.group())
 
-    # TODO: Search for files with certain file extensions.
+    length = len(file_list)
+    print(f"Found {length} matches.")
 
-    # TODO: Copy files from current location to a new folder.
+    for match in range(length):
+        print(f"Moving {file_list[match]} to {relocation_folder}.")
+        shutil.move(file_list[match], relocation_folder)
 
 
-selective_copy(input("Type path to folder you wish to search here: "))
+folder_path = input("Type path to folder you wish to search here: ")
+selective_copy(folder_path)
