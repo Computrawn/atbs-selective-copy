@@ -3,3 +3,5 @@
 *.pyc
 .idea
 venv
+search_folder
+relocation_folder
