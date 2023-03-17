@@ -28,8 +28,8 @@ def selective_copy(file_path):
 
     try:
         for match in range(length):
-            print(f"Moving {file_list[match]} to {relocation_folder}.")
-            shutil.move(file_list[match], relocation_folder)
+            print(f"Copying {file_list[match]} to {relocation_folder}.")
+            shutil.copy(file_list[match], relocation_folder)
     except FileNotFoundError:
         print("Unable to transfer files; folder not found.")
 
