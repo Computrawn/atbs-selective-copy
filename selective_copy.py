@@ -1,10 +1,22 @@
-#! python3
-"""selective_copy.py — An exercise in organizing files.
-For more information, see enclosed project_details.txt file."""
+#!/usr/bin/env python3
+# selective_copy.py — An exercise in organizing files.
+# For more information, see README.md
 
+import logging
 import os
 import re
 import shutil
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename="logging.txt",
+    format="%(asctime)s -  %(levelname)s -  %(message)s",
+)
+logging.disable(logging.CRITICAL)  # Note out to enable logging.
+
+
+"""Needs major refactor. I'm guessing using glob instead of regex would be better."""
+
 
 file_list = []
 
