@@ -25,7 +25,7 @@ def validate_directory() -> Path:
 
 
 def find_files(directory: Path) -> list[str]:
-    """Walk through directory tree and create and return list of files. If list is empty, raise error."""
+    """Walk through directory tree and create list of files matching user defined extension."""
     extension = input("Type extension you want to find here: ")
     file_list = [
         f"{dir_name}/{filename}"
@@ -33,7 +33,7 @@ def find_files(directory: Path) -> list[str]:
         for filename in filenames
         if filename.endswith(f".{extension}")
     ]
-
+    """Notify user if matches found."""
     if len(file_list) == 1:
         print(f"Found {len(file_list)} file ending in .{extension}.")
     elif len(file_list) > 1:
