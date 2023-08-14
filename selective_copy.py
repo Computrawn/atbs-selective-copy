@@ -3,7 +3,6 @@
 # For more information, see README.md
 
 from pathlib import Path
-import glob
 import logging
 import os
 import shutil
@@ -16,7 +15,8 @@ logging.basicConfig(
 # logging.disable(logging.CRITICAL)  # Note out to enable logging.
 
 
-def validate_directory():
+def validate_directory() -> Path:
+    """Check user input to determine validity."""
     directory = Path(input("Please type path of directory you wish to search: "))
     if directory.exists():
         return directory
@@ -24,31 +24,28 @@ def validate_directory():
         raise AttributeError
 
 
-def list_files(directory):
+def find_files(directory: Path) -> list[str]:
     """Walk through directory tree and create and return list of files. If list is empty, raise error."""
-
+    extension = input("Type extension you want to find here: ")
     file_list = [
         f"{dir_name}/{filename}"
         for dir_name, _, filenames in os.walk(directory)
         for filename in filenames
+        if filename.endswith(f".{extension}")
     ]
+
+    if len(file_list) == 1:
+        print(f"Found {len(file_list)} file ending in .{extension}.")
+    elif len(file_list) > 1:
+        print(f"Found {len(file_list)} files ending in .{extension}.")
+    else:
+        print(f"No files of extension type {extension} found.")
     return file_list
 
 
-def find_extensions(files):
-    extension = input("Type extension you want to find here: ")
-    files_found = [
-        file_name for file_name in files if file_name.endswith(f".{extension}")
-    ]
-    if files_found:
-        print(f"Found {len(files_found)} files.")
-        return files_found
-    else:
-        print(f"No files of extension type {extension} found.")
-
-
-def move_files(files_to_move):
-    copy_directory = input("Please type path to destination existing directory: ")
+def move_files(files_to_move: list[str]) -> None:
+    """Move files to user-designated path"""
+    copy_directory = Path(input("Please type path to destination existing directory: "))
     try:
         for filename in files_to_move:
             print(f"Copying {filename} to {copy_directory}.")
@@ -57,13 +54,13 @@ def move_files(files_to_move):
         print("Unable to transfer files; directory not found.")
 
 
-def main():
+def main() -> None:
+    """Validate directory, search folders for extensions and copy matching files to designated folder."""
     try:
         directory = validate_directory()
-        file_list = list_files(directory)
-        found_files = find_extensions(file_list)
-        if found_files:
-            move_files(found_files)
+        file_list = find_files(directory)
+        if file_list:
+            move_files(file_list)
     except AttributeError:
         print("Not a valid directory.")
 
