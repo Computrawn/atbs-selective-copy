@@ -16,18 +16,22 @@ logging.basicConfig(
 # logging.disable(logging.CRITICAL)  # Note out to enable logging.
 
 
-"""Needs major refactor. I'm guessing using glob instead of regex would be better."""
-
 # copy_dir = input("Please type path to destination existing directory: ")
 
-directory = Path(input("Please type path of directory you wish to search: "))
+
+def validate_directory():
+    directory = Path(input("Please type path of directory you wish to search: "))
+    if directory.exists():
+        return directory
+    else:
+        raise AttributeError
 
 
-def list_files():
-    """Walk through directory tree and create list of files."""
+def list_files(directory):
+    """Walk through directory tree and create and return list of files. If list is empty, raise error."""
 
     file_list = [
-        Path(f"{dir_name}/{filename}")
+        f"{dir_name}/{filename}"
         for dir_name, _, filenames in os.walk(directory)
         for filename in filenames
     ]
@@ -35,9 +39,12 @@ def list_files():
 
 
 def find_extensions(files):
-    extension = glob.glob("*.txt")
-    if extension in files:
-        print(extension)
+    extension = input("Type extension you want to find here: ")
+    files_found = [
+        file_name for file_name in files if file_name.endswith(f".{extension}")
+    ]
+    return files_found
+
     # length = len(file_list)
     # print(f"Found {length} matches: {file_list}.")
 
@@ -49,7 +56,21 @@ def find_extensions(files):
     #     print("Unable to transfer files; directory not found.")
 
 
-file_list = list_files()
-for file_name in file_list:
-    logging.debug(file_name)
-# find_extensions(file_list)
+directory = validate_directory()
+file_list = list_files(directory)
+found_files = find_extensions(file_list)
+for filename in found_files:
+    print(filename)
+
+# def main():
+#     try:
+#         directory = validate_directory()
+#         file_list = list_files(directory)
+#         logging.debug(file_list)
+#         # find_extensions(file_list)
+#     except AttributeError:
+#         print("Not a valid directory.")
+
+
+# if __name__ == "__main__":
+#     main()
