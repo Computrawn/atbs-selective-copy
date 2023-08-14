@@ -18,10 +18,9 @@ logging.basicConfig(
 def validate_directory() -> Path:
     """Check user input to determine path validity."""
     directory = Path(input("Please type path of directory you wish to search: "))
-    if directory.exists():
-        return directory
-    else:
+    if not directory.exists():
         raise AttributeError
+    return directory
 
 
 def find_files(directory: Path) -> list[str]:
