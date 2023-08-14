@@ -38,7 +38,7 @@ def find_files(directory: Path) -> list[str]:
     elif len(file_list) > 1:
         print(f"Found {len(file_list)} files ending in .{extension}.")
     else:
-        print(f"No files of extension type {extension} found.")
+        print(f"No files of extension type .{extension} found.")
     return file_list
 
 
