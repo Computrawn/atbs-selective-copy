@@ -16,9 +16,6 @@ logging.basicConfig(
 # logging.disable(logging.CRITICAL)  # Note out to enable logging.
 
 
-# copy_dir = input("Please type path to destination existing directory: ")
-
-
 def validate_directory():
     directory = Path(input("Please type path of directory you wish to search: "))
     if directory.exists():
@@ -43,34 +40,33 @@ def find_extensions(files):
     files_found = [
         file_name for file_name in files if file_name.endswith(f".{extension}")
     ]
-    return files_found
-
-    # length = len(file_list)
-    # print(f"Found {length} matches: {file_list}.")
-
-    # try:
-    #     for match in range(length):
-    #         print(f"Copying {file_list[match]} to {copy_dir}.")
-    #         shutil.copy(file_list[match], copy_dir)
-    # except FileNotFoundError:
-    #     print("Unable to transfer files; directory not found.")
+    if files_found:
+        print(f"Found {len(files_found)} files.")
+        return files_found
+    else:
+        print(f"No files of extension type {extension} found.")
 
 
-directory = validate_directory()
-file_list = list_files(directory)
-found_files = find_extensions(file_list)
-for filename in found_files:
-    print(filename)
-
-# def main():
-#     try:
-#         directory = validate_directory()
-#         file_list = list_files(directory)
-#         logging.debug(file_list)
-#         # find_extensions(file_list)
-#     except AttributeError:
-#         print("Not a valid directory.")
+def move_files(files_to_move):
+    copy_directory = input("Please type path to destination existing directory: ")
+    try:
+        for filename in files_to_move:
+            print(f"Copying {filename} to {copy_directory}.")
+            shutil.copy(filename, copy_directory)
+    except FileNotFoundError:
+        print("Unable to transfer files; directory not found.")
 
 
-# if __name__ == "__main__":
-#     main()
+def main():
+    try:
+        directory = validate_directory()
+        file_list = list_files(directory)
+        found_files = find_extensions(file_list)
+        if found_files:
+            move_files(found_files)
+    except AttributeError:
+        print("Not a valid directory.")
+
+
+if __name__ == "__main__":
+    main()
