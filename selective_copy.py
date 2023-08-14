@@ -44,7 +44,7 @@ def find_files(directory: Path) -> list[str]:
 
 def move_files(files_to_move: list[str]) -> None:
     """Move files to user-designated path"""
-    copy_directory = Path(input("Please type path to destination existing directory: "))
+    copy_directory = Path(input("Please type path of existing directory: "))
     try:
         for filename in files_to_move:
             print(f"Copying {filename} to {copy_directory}.")
