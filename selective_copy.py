@@ -2,9 +2,10 @@
 # selective_copy.py — An exercise in organizing files.
 # For more information, see README.md
 
+from pathlib import Path
+import glob
 import logging
 import os
-import re
 import shutil
 
 logging.basicConfig(
@@ -12,39 +13,43 @@ logging.basicConfig(
     filename="logging.txt",
     format="%(asctime)s -  %(levelname)s -  %(message)s",
 )
-logging.disable(logging.CRITICAL)  # Note out to enable logging.
+# logging.disable(logging.CRITICAL)  # Note out to enable logging.
 
 
 """Needs major refactor. I'm guessing using glob instead of regex would be better."""
 
+# copy_dir = input("Please type path to destination existing directory: ")
 
-file_list = []
-
-
-def selective_copy(file_path):
-    """Walk through folder tree, search for files with user-defined file extension,
-    then copy those files to a user-defined directory."""
-
-    ext_regex = re.compile(r"(.*)\." + (input("Type desired file extension here: ")))
-    copy_dir = input("Please type path to destination existing directory: ")
-
-    for dir_name, subfolders, filenames in os.walk(file_path):
-        for filename in filenames:
-            absolute_path = f"{dir_name}/{filename}"
-            match_object = ext_regex.search(absolute_path)
-            if match_object is not None:
-                file_list.append(match_object.group())
-
-    length = len(file_list)
-    print(f"Found {length} matches: {file_list}.")
-
-    try:
-        for match in range(length):
-            print(f"Copying {file_list[match]} to {copy_dir}.")
-            shutil.copy(file_list[match], copy_dir)
-    except FileNotFoundError:
-        print("Unable to transfer files; directory not found.")
+directory = Path(input("Please type path of directory you wish to search: "))
 
 
-dir_path = input("Type path to directory you wish to search here: ")
-selective_copy(dir_path)
+def list_files():
+    """Walk through directory tree and create list of files."""
+
+    file_list = [
+        Path(f"{dir_name}/{filename}")
+        for dir_name, _, filenames in os.walk(directory)
+        for filename in filenames
+    ]
+    return file_list
+
+
+def find_extensions(files):
+    extension = glob.glob("*.txt")
+    if extension in files:
+        print(extension)
+    # length = len(file_list)
+    # print(f"Found {length} matches: {file_list}.")
+
+    # try:
+    #     for match in range(length):
+    #         print(f"Copying {file_list[match]} to {copy_dir}.")
+    #         shutil.copy(file_list[match], copy_dir)
+    # except FileNotFoundError:
+    #     print("Unable to transfer files; directory not found.")
+
+
+file_list = list_files()
+for file_name in file_list:
+    logging.debug(file_name)
+# find_extensions(file_list)
