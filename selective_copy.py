@@ -12,7 +12,7 @@ logging.basicConfig(
     filename="logging.txt",
     format="%(asctime)s -  %(levelname)s -  %(message)s",
 )
-# logging.disable(logging.CRITICAL)  # Note out to enable logging.
+logging.disable(logging.CRITICAL)  # Note out to enable logging.
 
 
 def validate_directory() -> Path:
@@ -25,7 +25,7 @@ def validate_directory() -> Path:
 
 def find_files(directory: Path) -> list[str]:
     """Walk through directory tree and create list of files matching user defined extension."""
-    extension = input("Type extension you want to find here: ")
+    extension = input("Type extension you want to find here: ").lower()
     file_list = [
         f"{dir_name}/{filename}"
         for dir_name, _, filenames in os.walk(directory)
