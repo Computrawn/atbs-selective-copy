@@ -42,15 +42,19 @@ def find_files(directory: Path) -> list[str]:
     return file_list
 
 
-def move_files(files_to_move: list[str]) -> None:
-    """Move files to user-designated path"""
+def verify_copy_folder() -> Path:
+    """Create copy directory if path doesn't exist."""
     copy_directory = Path(input("Please type path of existing directory: "))
-    try:
-        for filename in files_to_move:
-            print(f"Copying {filename} to {copy_directory}.")
-            shutil.copy(filename, copy_directory)
-    except FileNotFoundError:
-        print("Unable to transfer files; directory not found.")
+    if not copy_directory.exists():
+        os.mkdir(copy_directory)
+    return copy_directory
+
+
+def move_files(files_to_move: list[str], new_location: Path) -> None:
+    """Move files to user-designated path"""
+    for filename in files_to_move:
+        print(f"— Copying {filename} to {new_location}.")
+        shutil.copy(filename, new_location)
 
 
 def main() -> None:
@@ -59,7 +63,8 @@ def main() -> None:
         directory = validate_directory()
         file_list = find_files(directory)
         if file_list:
-            move_files(file_list)
+            copy_location = verify_copy_folder()
+            move_files(file_list, copy_location)
     except AttributeError:
         print("Not a valid directory.")
 
