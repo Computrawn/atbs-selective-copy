@@ -52,9 +52,10 @@ def verify_copy_folder() -> Path:
 
 def move_files(files_to_move: list[str], new_location: Path) -> None:
     """Move files to user-designated path"""
-    for filename in files_to_move:
-        print(f"— Copying {filename} to {new_location}.")
-        shutil.copy(filename, new_location)
+    for file_path in files_to_move:
+        file_name = file_path.split("/")
+        print(f"— Copying {file_name[-1]} to {new_location}.")
+        shutil.copy(file_path, new_location)
 
 
 def main() -> None:
